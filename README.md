@@ -141,46 +141,46 @@ Solemate is a web-based e-commerce platform designed for selling footwear. It al
 
 ## 5. Project Structure
 
-solemate_project/
-   assets/ # Frontend assets
-      css/ # (Currently style.css is in root, can be moved here)
-      images/ # Site images like logo, favicon, placeholder
-         placeholder.png
-         favicon.ico
-      js/
-         main.js # Main JavaScript file
-   templates/ # Reusable PHP template parts
-      header.php
-      footer.php
-      navigation.php
-      promotion_bar.php
-   uploads/ # User uploaded content or dynamic product images
-      products/ # Product images
-         example-shoe1.jpg
-   .gitkeep # To ensure the empty folder is tracked by Git
-   config.php # Database and site configuration
-   index.php # Homepage / Main product listing
-   shop.php # All products page with filters
-   get_product_details.php # AJAX endpoint for product modal
-   cart_actions.php # AJAX endpoint for cart operations
-   get_cart_data.php # AJAX endpoint to fetch cart data
-   register.php # User registration page
-   process_login.php # Handles login form submission (for modal)
-   logout.php # Handles user logout
-   account.php # User account dashboard
-   edit_profile.php # Page for editing user profile and password
-   process_edit_profile.php # Handles profile update form
-   process_change_password.php # Handles password change form
-   order_history.php # Page to display user's order history
-   view_order.php # Page to display details of a single order
-   manage_addresses.php # Page to manage user addresses
-   terms_of_service.php # Terms of Service page
-   secret_video.php # Easter egg video page
-   style.css # Main stylesheet
-   emman.jpg # Easter egg image
-   secret.ia.mp4 # Easter egg video
-   .gitignore # Specifies intentionally untracked files by Git
-   README.md # This documentation file
+*solemate_project/
+*   assets/ # Frontend assets
+*      css/ # (Currently style.css is in root, can be moved here)
+*      images/ # Site images like logo, favicon, placeholder
+*         placeholder.png
+*         favicon.ico
+*      js/
+*         main.js # Main JavaScript file
+*   templates/ # Reusable PHP template parts
+*      header.php
+*      footer.php
+*      navigation.php
+*      promotion_bar.php
+*   uploads/ # User uploaded content or dynamic product images
+*      products/ # Product images
+*         example-shoe1.jpg
+*   .gitkeep # To ensure the empty folder is tracked by Git
+*   config.php # Database and site configuration
+*   index.php # Homepage / Main product listing
+*   shop.php # All products page with filters
+*   get_product_details.php # AJAX endpoint for product modal
+*   cart_actions.php # AJAX endpoint for cart operations
+*   get_cart_data.php # AJAX endpoint to fetch cart data
+*   register.php # User registration page
+*   process_login.php # Handles login form submission (for modal)
+*   logout.php # Handles user logout
+*   account.php # User account dashboard
+*   edit_profile.php # Page for editing user profile and password
+*   process_edit_profile.php # Handles profile update form
+*   process_change_password.php # Handles password change form
+*   order_history.php # Page to display user's order history
+*   view_order.php # Page to display details of a single order
+*   manage_addresses.php # Page to manage user addresses
+*   terms_of_service.php # Terms of Service page
+*   secret_video.php # Easter egg video page
+*   style.css # Main stylesheet
+*   emman.jpg # Easter egg image
+*   secret.ia.mp4 # Easter egg video
+*   .gitignore # Specifies intentionally untracked files by Git
+*   README.md # This documentation file
 
 
 ---
