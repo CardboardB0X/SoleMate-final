@@ -21,10 +21,10 @@
     *   [Shopping Cart](#shopping-cart)
     *   [Account Management](#account-management)
 7.  [Database Schema](#database-schema)
-8.  [API Endpoints (if applicable)](#api-endpoints)
+8.  [API Endpoints](#api-endpoints)
 9.  [Troubleshooting](#troubleshooting)
 10. [Future Enhancements / TODO](#future-enhancements--todo)
-11. [Contributing (if open source)](#contributing)
+11. [Contributing](#contributing)
 
 ---
 
