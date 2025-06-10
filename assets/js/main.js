@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return unsafe.toString()
             .replace(/&/g, "&")
             .replace(/</g, "<")
-            .replace(/'/g, "'");
+            .replace(/>/g, ">");
     }
 
     function nl2br(str) {
@@ -21,12 +21,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function closeModal(modalElement) {
         if (modalElement && modalElement.style.display === 'block') {
             modalElement.style.display = 'none';
-            document.body.style.overflow = 'auto'; // Restore background scrolling
-            // Specific resets for different modals
+            document.body.style.overflow = 'auto';
             if (modalElement.id === 'productModal') {
                 const productModalBody = document.getElementById('modalBodyContent');
                 if (productModalBody) {
-                    productModalBody.innerHTML = '<div class="spinner" id="productModalSpinner"></div>';
+                    productModalBody.innerHTML = '<div class="spinner" id="productModalSpinnerInstance"></div>';
                 }
             }
             if (modalElement.id === 'loginModal') {
@@ -53,8 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Product Detail Modal ---
     const productModal = document.getElementById('productModal');
-    const modalBodyContent = document.getElementById('modalBodyContent'); // For product modal
-    let productModalSpinner;
+    const modalBodyContent = document.getElementById('modalBodyContent');
+    let productModalSpinner; 
 
     async function openProductDetailModal(productId) {
         if (!productModal || !modalBodyContent) {
@@ -194,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCartDisplay(cartData);
         } catch (error) {
             console.error("Error fetching cart data:", error);
-            showCartNotification('Error: Could not load cart.', 'error', 5000);
+            showUINotification('Error: Could not load cart.', 'error', 5000);
         }
     }
 
@@ -214,14 +213,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             const result = await response.json();
             if (result.success) {
-                showCartNotification(result.message || 'Cart updated!', 'success');
+                showUINotification(result.message || 'Cart updated!', 'success');
                 await fetchCartDataAndUpdateDisplay();
             } else {
-                showCartNotification(result.message || 'Could not update cart.', 'error');
+                showUINotification(result.message || 'Could not update cart.', 'error');
             }
         } catch (error) {
             console.error(`Error performing cart action (${action}):`, error);
-            showCartNotification('An error occurred while updating cart. Please try again.', 'error');
+            showUINotification('An error occurred while updating cart. Please try again.', 'error');
         }
     }
 
@@ -236,10 +235,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    document.querySelectorAll('.add-to-cart-btn').forEach(button => { // Attach to all initially present add-to-cart buttons
+    document.querySelectorAll('.add-to-cart-btn:not(.modal-add-to-cart)').forEach(button => {
         button.addEventListener('click', handleAddToCartClick);
     });
-
 
     async function handleQuantityChange(event) {
         const productId = event.target.getAttribute('data-product-id');
@@ -286,11 +284,11 @@ document.addEventListener('DOMContentLoaded', function() {
         cartModal.addEventListener('click', (event) => { if (event.target === cartModal) closeModal(cartModal); });
     }
     
-    function showCartNotification(message, type = 'success', duration = 3000) {
-        let n = document.getElementById('cart-notification');
+    function showUINotification(message, type = 'success', duration = 3000) {
+        let n = document.getElementById('ui-notification');
         if (!n) {
             n = document.createElement('div');
-            n.id = 'cart-notification';
+            n.id = 'ui-notification';
             Object.assign(n.style, {
                 position: 'fixed',
                 bottom: '20px',
@@ -358,7 +356,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-
     if (loginModalCloseButton) {
         loginModalCloseButton.addEventListener('click', () => closeModal(loginModal));
     }
@@ -373,40 +370,92 @@ document.addEventListener('DOMContentLoaded', function() {
     if (loginModalForm) {
         loginModalForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            if (loginMessageDiv) loginMessageDiv.innerHTML = '<div class="spinner" style="margin: 10px auto;"></div>';
+            if (!loginMessageDiv) {
+                console.error("Login message div not found for login modal.");
+                return;
+            }
+            
+            loginMessageDiv.innerHTML = '<div class="spinner" style="margin: 10px auto;"></div>';
+
+            // Optional: Small delay before fetch to make spinner visible if backend is too fast
+            // await new Promise(resolve => setTimeout(resolve, 300)); 
 
             const formData = new FormData(this);
             try {
                 const response = await fetch('process_login.php', { method: 'POST', body: formData });
-                let result;
+                let result; 
                 if (!response.ok) {
-                    // Try to parse error response, otherwise use status text
                     try {
-                        result = await response.json();
+                        result = await response.json(); 
                         throw new Error(result.message || `Server error: ${response.status}`);
-                    } catch (jsonError) {
+                    } catch (jsonError) { 
                         throw new Error(`Server error: ${response.status}`);
                     }
                 }
-                result = await response.json(); // If response.ok
+                result = await response.json();
 
                 if (result.success) {
-                    if (loginMessageDiv) {
-                        loginMessageDiv.innerHTML = `<div class="alert alert-success">${escapeHtml(result.message)}</div>`;
+                    // Optional: Delay before showing Poku Loader to ensure initial spinner is seen
+                    // await new Promise(resolve => setTimeout(resolve, 200));
+
+                    loginMessageDiv.innerHTML = `
+                        <div class="loading-screen-content">
+                            <img src="poku_loader.gif" alt="Poku Delivering Mail" class="loading-character">
+                            <h2>Logging In...</h2>
+                            <div class="progress-container">
+                                <div class="progress-bar-wrapper">
+                                    <div id="loginProgressBar" style="width:0%; height:100%; background-color:#f39c12; border-radius:15px; transition:width 0.3s ease-out; text-align:center; line-height:25px; color:white; font-size:0.8em;"></div>
+                                    <img id="loginProgressBarPoint" src="poku_point(flip).gif" alt="Progress point" style="width:30px; height:30px; position:absolute; top:50%; left:0%; transform:translate(-50%, -50%); transition:left 0.3s ease-out; z-index:2;">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    const progressBar = document.getElementById('loginProgressBar');
+                    const progressBarPoint = document.getElementById('loginProgressBarPoint');
+                    
+                    if (progressBar && progressBarPoint) {
+                        let progress = 0;
+                        // --- ADJUST THESE FOR LOADING BAR SPEED & DELAY ---
+                        const totalAnimationTime = 1800; // Total animation duration in ms (e.g., 1.8 seconds)
+                        const updateFrequency = 40;     // How often to update the bar in ms (e.g., 25 times per second)
+                        const numSteps = totalAnimationTime / updateFrequency;
+                        const increment = 100 / numSteps;
+                        const postAnimationDelay = 400; // Delay AFTER 100% before redirect (ms)
+                        const preAnimationDOMReadyDelay = 50; // Small delay for DOM to render loader HTML
+
+                        setTimeout(() => { // Delay for DOM render
+                            const progressInterval = setInterval(() => {
+                                progress += increment;
+                                if (progress <= 100) {
+                                    const currentProgress = Math.min(progress, 100);
+                                    progressBar.style.width = currentProgress + '%';
+                                    progressBar.textContent = Math.floor(currentProgress) + '%';
+                                    progressBarPoint.style.left = currentProgress + '%';
+                                } else {
+                                    clearInterval(progressInterval);
+                                    // Ensure it visually hits 100%
+                                    progressBar.style.width = '100%';
+                                    progressBar.textContent = '100%';
+                                    progressBarPoint.style.left = '100%';
+                                    
+                                    setTimeout(() => { // Delay before redirect
+                                        window.location.href = result.redirect_url;
+                                    }, postAnimationDelay);
+                                }
+                            }, updateFrequency);
+                        }, preAnimationDOMReadyDelay);
+
+                    } else {
+                        console.warn("Progress bar elements for login not found, redirecting immediately.");
+                        window.location.href = result.redirect_url;
                     }
-                    setTimeout(() => {
-                        window.location.href = result.redirect_url; // Use URL from PHP response
-                    }, 1500);
                 } else {
-                    if (loginMessageDiv) {
-                        loginMessageDiv.innerHTML = `<div class="alert alert-danger">${escapeHtml(result.message || 'Login failed.')}</div>`;
-                    }
+                    loginMessageDiv.innerHTML = `<div class="alert alert-danger">${escapeHtml(result.message || 'Login failed.')}</div>`;
                 }
             } catch (error) {
                 console.error('Login form submission error:', error);
-                if (loginMessageDiv) {
-                    loginMessageDiv.innerHTML = `<div class="alert alert-danger">An error occurred during login: ${escapeHtml(error.message)}</div>`;
-                }
+                loginMessageDiv.innerHTML = `<div class="alert alert-danger">An error occurred during login: ${escapeHtml(error.message)}</div>`;
             }
         });
     }
@@ -414,9 +463,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- General Modal Closing (Escape Key) ---
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
-            if (productModal && productModal.style.display === 'block') closeModal(productModal);
-            if (cartModal && cartModal.style.display === 'block') closeModal(cartModal);
-            if (loginModal && loginModal.style.display === 'block') closeModal(loginModal);
+            const currentProductModal = document.getElementById('productModal');
+            const currentCartModal = document.getElementById('cartModal');
+            const currentLoginModal = document.getElementById('loginModal');
+            
+            if (currentProductModal && currentProductModal.style.display === 'block') closeModal(currentProductModal);
+            if (currentCartModal && currentCartModal.style.display === 'block') closeModal(currentCartModal);
+            if (currentLoginModal && currentLoginModal.style.display === 'block') closeModal(currentLoginModal);
         }
     });
 

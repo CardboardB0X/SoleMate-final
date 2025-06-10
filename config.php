@@ -27,7 +27,7 @@ if (!defined('SITE_URL')) {
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) ? "https://" : "http://";
     $host = $_SERVER['HTTP_HOST'];
 
-    $project_folder_name = 'solemate_project'; // <-- ADJUST THIS IF YOUR PROJECT FOLDER IS DIFFERENT, OR '' IF IN ROOT
+    $project_folder_name = 'SolMet'; // <-- ADJUST THIS IF YOUR PROJECT FOLDER IS DIFFERENT, OR '' IF IN ROOT
 
     $base_path = '';
     if (!empty($project_folder_name)) {

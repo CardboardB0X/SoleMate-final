@@ -72,11 +72,11 @@ $footer_path_prefix = $path_prefix ?? '';
             <p>Built by The ClickSenvee Team</p>
         </div>
     </footer>
-    <!-- <footer class="easter-egg-footer">
+    <footer class="easter-egg-footer">
         <a href="<?php echo e($footer_path_prefix); ?>secret_video.php" target="_blank" title="What could this be?">
             <img src="<?php echo e($footer_path_prefix); ?>emman.jpg" alt="A mysterious figure" class="footer-image">
             <p class="footer-caption">hot daddy in your area</p>
-        </a> --> 
+        </a>
     </footer>
 <script src="<?php echo e($footer_path_prefix); ?>assets/js/main.js?v=<?php echo time(); ?>"></script>
 </body>

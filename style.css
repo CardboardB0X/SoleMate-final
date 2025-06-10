@@ -902,3 +902,136 @@ footer.main-footer a:hover { color: #ffffff; text-decoration: underline; }
 .address-actions .btn-secondary:hover {
     background-color: #6c7a7d;
 }
+
+.order-progress-bar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding: 10px 0;
+    position: relative;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    flex: 1;
+}
+
+.step-dot {
+    width: 20px;
+    height: 20px;
+    background-color: #bdc3c7;
+    border-radius: 50%;
+    margin-bottom: 8px;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px #bdc3c7;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    z-index: 2;
+}
+
+.progress-step.completed .step-dot {
+    background-color: #2ecc71;
+    box-shadow: 0 0 0 2px #2ecc71;
+}
+.progress-step.active .step-dot {
+    background-color: #f39c12;
+    box-shadow: 0 0 0 2px #f39c12;
+    transform: scale(1.2);
+}
+
+.step-label {
+    font-size: 0.8em;
+    color: #555;
+    max-width: 80px;
+}
+.progress-step.completed .step-label,
+.progress-step.active .step-label {
+    color: #1c3a5e;
+    font-weight: 500;
+}
+
+.progress-line {
+    height: 4px;
+    background-color: #bdc3c7;
+    flex-grow: 1;
+    margin: 0 -1px;
+    align-self: center;
+    transform: translateY(-14px);
+    z-index: 1; 
+}
+.progress-line.completed {
+    background-color: #2ecc71;
+}
+
+.order-progress-bar .progress-step:not(:last-child) + .progress-line {
+    display: block;
+}
+.order-progress-bar .progress-step:last-child ~ .progress-line {
+    display: none;
+}
+
+
+
+
+#loginMessage .loading-screen-content { /* Specific class for when it's in loginMessage */
+    text-align: center;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#loginMessage .loading-character {
+    width: 100px; /* Adjust size as needed */
+    height: auto;
+    margin-bottom: 15px;
+}
+
+#loginMessage .loading-screen-content h2 {
+    font-size: 1.2em;
+    color: #1c3a5e; /* Or your theme color */
+    margin-bottom: 20px;
+}
+
+#loginMessage .progress-container {
+    width: 80%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+#loginMessage .progress-bar-wrapper {
+    width: 100%;
+    height: 25px; /* Increased height for visibility of point gif */
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    position: relative; /* For positioning the point GIF */
+    overflow: hidden; /* If progress bar goes outside */
+}
+
+#loginMessage #progress-bar {
+    width: 0%; /* Starts at 0% */
+    height: 100%;
+    background-color: #f39c12; /* Your theme's accent color */
+    border-radius: 15px;
+    transition: width 0.3s ease-out; /* Smooth animation for width change */
+    text-align: center;
+    line-height: 25px;
+    color: white;
+    font-size: 0.8em;
+}
+
+#loginMessage #progress-bar-point {
+    width: 30px; /* Adjust size of your poku_point.gif */
+    height: 30px; /* Adjust size */
+    position: absolute;
+    top: 50%;
+    left: 0%; /* Starts at 0% */
+    transform: translate(-50%, -50%); /* Center the GIF on its left edge */
+    transition: left 0.3s ease-out; /* Smooth animation for left change */
+    z-index: 2; /* Above the progress bar fill */
+}
